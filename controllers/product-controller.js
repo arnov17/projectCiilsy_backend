@@ -33,10 +33,9 @@ exports.create = async (req, res, next) => {
 
     // upload response
     console.log(req.file);
-    console.log(req)
-    const upload_thumbnailurl = req.file.path + (req.file.mimetype === "image/png" ? '.png' :'.jpeg');
+    // console.log(req)
+    const upload_thumbnailurl = `/thumbnail/${req.file.filename}`
     
-
     const product = await ProductModel.create({
       title,
       author,
@@ -44,7 +43,7 @@ exports.create = async (req, res, next) => {
       category_id,
       price,
       stock,
-      thumbnail_url: upload_thumbnailurl,
+      thumbnail_url : upload_thumbnailurl,
       user_id: user.id,
     });
 

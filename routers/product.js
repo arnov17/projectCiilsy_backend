@@ -5,7 +5,19 @@ const router = Router();
 const productController = require("../controllers/product-controller");
 
 const multer = require('multer');
-const upload = multer({dest: "thumbnail/"})
+const path = require('path');
+const crypto = require('crypto');
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, "..", "thumbnail"),
+    filename: function (req, file, cb) {
+      crypto.pseudoRandomBytes(16, function (err, raw) {
+        if (err) return cb(err)  
+
+        cb(null, raw.toString('hex') + path.extname(file.originalname))
+      })
+    }
+})
+const upload = multer({storage: storage});
 
 router.post("/create", upload.single('fileThumbnail'), productController.create);
 
