@@ -23,7 +23,7 @@ router.post("/create", upload.single('fileThumbnail'), productController.create)
 
 router.post("/create", productController.create);
 router.get("/read", productController.read);
-router.patch("/update", productController.update);
-router.delete("/delete", productController.delete);
+router.patch("/update/:id", productController.update);
+router.delete("/delete/:id", productController.delete);
 
 module.exports = router;
