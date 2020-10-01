@@ -34,7 +34,7 @@ exports.create = async (req, res, next) => {
     // upload response
     console.log(req.file);
     // console.log(req)
-    const upload_thumbnailurl = `/thumbnail/${req.file.filename}`
+    // const upload_thumbnailurl = `/thumbnail/${req.file.filename}`
     
     const product = await ProductModel.create({
       title,
@@ -43,7 +43,8 @@ exports.create = async (req, res, next) => {
       category_id,
       price,
       stock,
-      thumbnail_url : upload_thumbnailurl,
+      // thumbnail_url : upload_thumbnailurl,
+      thumbnail_url ,
       user_id: user.id,
     });
 
@@ -67,6 +68,20 @@ exports.read = async (req, res, next) => {
     } catch (error) {
       console.log(error)
       return next(error);
+    }
+  };
+
+exports.findById = async (req, res) => {
+    try {
+      const params = req.params;
+      const id = params.id;
+  
+      const findProduct = await ProductModel.findByPk(id);
+      res.send(findProduct);
+    } catch (error) {
+      res.status(500).send({
+        message: "Error when find product by id",
+      });
     }
   };
 
@@ -139,7 +154,7 @@ exports.delete = async (req, res, next) => {
     try {
       const { authorization } = req.headers;
       const { id } = req.body;
-  
+      console.log(id)
       if (!authorization) {
         const error = new Error("Authorization required");
         error.statusCode = 401;
