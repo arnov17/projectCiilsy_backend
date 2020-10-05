@@ -13,8 +13,9 @@ exports.create = async (req, res, next) => {
       category_id,
       price,
       stock,
-      thumbnail_url,
+      // thumbnail_url,
     } = req.body;
+    // console.log("aa " + JSON.stringify(req.headers));
 
     if (!authorization) {
       const error = new Error("Authorization required");
@@ -41,7 +42,7 @@ exports.create = async (req, res, next) => {
     // upload response
     console.log(req.file);
     // console.log(req)
-    // const upload_thumbnailurl = `/thumbnail/${req.file.filename}`
+    const upload_thumbnailurl = `/thumbnail/${req.file.filename}`;
 
     const product = await ProductModel.create({
       title,
@@ -50,8 +51,8 @@ exports.create = async (req, res, next) => {
       category_id,
       price,
       stock,
-      // thumbnail_url : upload_thumbnailurl,
-      thumbnail_url,
+      thumbnail_url: upload_thumbnailurl,
+      // thumbnail_url,
       user_id: user.id,
     });
 
@@ -96,6 +97,7 @@ exports.findById = async (req, res) => {
 exports.update = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
+    console.log("aa " + JSON.stringify(req.headers));
 
     if (!authorization) {
       const error = new Error("Authorization required");
@@ -129,6 +131,7 @@ exports.update = async (req, res, next) => {
       stock,
       thumbnail_url,
     } = req.body;
+    console.log(req.body);
 
     const existProduct = await ProductModel.findOne({
       where: {
