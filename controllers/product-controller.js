@@ -98,6 +98,7 @@ exports.update = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     console.log("aa " + JSON.stringify(req.headers));
+    console.log(authorization);
 
     if (!authorization) {
       const error = new Error("Authorization required");
@@ -129,9 +130,12 @@ exports.update = async (req, res, next) => {
       category_id,
       price,
       stock,
-      thumbnail_url,
+      // thumbnail_url,
     } = req.body;
     console.log(req.body);
+
+    // console.log(req.file);
+    // const upload_thumbnailurl = `/thumbnail/${req.file.filename}`;
 
     const existProduct = await ProductModel.findOne({
       where: {
@@ -152,7 +156,7 @@ exports.update = async (req, res, next) => {
         category_id,
         price,
         stock,
-        thumbnail_url,
+        // thumbnail_url: upload_thumbnailurl,
         user_id: user.id,
       },
       {

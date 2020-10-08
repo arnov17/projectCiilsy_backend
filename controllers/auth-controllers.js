@@ -47,23 +47,26 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     // console.log(req.body);
+    let level = "USER";
+    if (req.url === "/login/admin") level = "ADMIN";
 
     const existUser = await UserModel.findOne({
       where: {
         email,
+        level,
       },
     });
 
     if (!existUser) {
       const error = new Error("The Email not found");
-      error.statusCode = 404;
+      error.statusCode = 500;
       throw error;
     }
 
     const isSamePassword = await bcrypt.compare(password, existUser.password);
     if (!isSamePassword) {
       const error = new Error("Password incorrect");
-      error.statusCode = 401;
+      error.statusCode = 500;
       throw error;
     }
 

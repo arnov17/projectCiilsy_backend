@@ -24,6 +24,12 @@ router.post(
   productController.create
 );
 
+router.patch(
+  "/update",
+  upload.single("fileThumbnail"),
+  productController.update
+);
+
 router.post("/create", productController.create);
 router.get("/read", productController.read);
 router.get("/read/:id", productController.findById);
