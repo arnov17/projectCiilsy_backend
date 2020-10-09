@@ -2,6 +2,8 @@ const { Router } = require("express");
 
 const router = Router();
 const productController = require("../controllers/product-controller");
+const authorize = require("../middleware/auth");
+const level = require("../config/level");
 
 const multer = require("multer");
 const path = require("path");
@@ -30,10 +32,25 @@ router.patch(
   productController.update
 );
 
-router.post("/create", productController.create);
 router.get("/read", productController.read);
 router.get("/read/:id", productController.findById);
-router.patch("/update", productController.update);
 router.delete("/delete", productController.delete);
+
+//with middleware
+// router.post(
+//   "/create",
+//   upload.single("fileThumbnail"), authorize(level.Admin),
+//   productController.create
+// );
+
+// router.patch(
+//   "/update",
+//   upload.single("fileThumbnail"), authorize(level.Admin),
+//   productController.update
+// );
+
+// router.get("/read", authorize(), productController.read);
+// router.get("/read/:id", authorize(), productController.findById);
+// router.delete("/delete", authorize(), productController.delete);
 
 module.exports = router;

@@ -1,21 +1,11 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const { UserModel, ProductModel } = require("../db/models");
+const { UserModel, ProductModel, categoryModel } = require("../db/models");
+const { Op } = require("sequelize");
 
 exports.create = async (req, res, next) => {
   try {
-    // console.log(req.headers)
     const { authorization } = req.headers;
-    const {
-      title,
-      author,
-      description,
-      category_id,
-      price,
-      stock,
-      // thumbnail_url,
-    } = req.body;
-    // console.log("aa " + JSON.stringify(req.headers));
 
     if (!authorization) {
       const error = new Error("Authorization required");
@@ -39,6 +29,7 @@ exports.create = async (req, res, next) => {
       throw error;
     }
 
+    const { title, author, description, category_id, price, stock } = req.body;
     // upload response
     console.log(req.file);
     // console.log(req)
@@ -68,7 +59,35 @@ exports.create = async (req, res, next) => {
 
 exports.read = async (req, res, next) => {
   try {
+    // const param = req.query;
+
+    // //Pagination
+    // const limit = param.limit ? Number(param.limit) : 10;
+    // const offset = Number(limit) * ((Number(param.page || 1) || 1) - 1);
+
+    // const order =
+    //   // show new id at first with desc
+    //   params.sort_by && params.sort_type
+    //     ? [[params.sort_by, params.sort_type]]
+    //     : [["id", "DESC"]];
+
+    // const where = {};
+    // if (params.name) where.title = { [Op.like]: `%${params.title}%` };
+    // if (params.author) where.author = { [Op.like]: `%${params.author}%` };
+
+    // const products = await ProductModel.findAndCountAll({
+    //   limit: limit || 10,
+    //   offset,
+    //   where,
+    //   order,
+    //   attribute: this.attribute,
+    // });
+    // products.limit = limit;
+    // products.offset = offset;
+    // products.page = offset / limit + 1;
+
     const products = await ProductModel.findAll();
+
     return res.status(200).json({
       message: "Success get products",
       data: products,
@@ -91,6 +110,7 @@ exports.findById = async (req, res) => {
     res.status(500).send({
       message: "Error when find product by id",
     });
+    return next(error);
   }
 };
 
