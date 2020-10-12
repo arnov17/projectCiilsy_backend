@@ -4,7 +4,7 @@ const { UserModel } = require("../db/models");
 
 const authorize = (levels = []) => {
   try {
-    console.log("line 7" + levels);
+    // allow for a string or array
     if (typeof levels === "string") {
       levels = [levels];
     }
@@ -12,32 +12,26 @@ const authorize = (levels = []) => {
       async (req, res, next) => {
         try {
           const { authorization } = req.headers;
-
-          if (!authorization) {
-            const error = new Error("Authorization required");
-            error.statusCode = 401;
-            throw error;
-          }
-
           const token = authorization.split(" ")[1];
-          const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-          // console.log(decodedToken)
-          const user_id = decodedToken.sub;
+          // const token = req.header("authorization").replace("Bearer ", "");
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
           const user = await UserModel.findOne({
             where: {
-              id: user_id,
+              id: decoded.sub,
             },
           });
-          if (!user) {
-            const error = new Error("User with this token not found");
-            error.statusCode = 401;
-            throw error;
+          // console.log(user);
+          if (levels.length && !levels.includes(user.level)) {
+            return res.status(401).send({
+              message: "Unauthorized",
+            });
           }
           req.body.user_id = user.id;
+          console.log(req.body);
           next();
         } catch (error) {
           return res.status(401).send({
-            mesaage: "unauthorized",
+            message: "Unauthorized",
           });
         }
       },

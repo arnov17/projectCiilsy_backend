@@ -20,37 +20,22 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+//with middleware
 router.post(
   "/create",
   upload.single("fileThumbnail"),
+  authorize(level.Admin),
   productController.create
 );
 
 router.patch(
   "/update",
   upload.single("fileThumbnail"),
+  authorize(level.Admin),
   productController.update
 );
-
+router.delete("/delete", authorize(level.Admin), productController.delete);
 router.get("/read", productController.read);
 router.get("/read/:id", productController.findById);
-router.delete("/delete", productController.delete);
-
-//with middleware
-// router.post(
-//   "/create",
-//   upload.single("fileThumbnail"), authorize(level.Admin),
-//   productController.create
-// );
-
-// router.patch(
-//   "/update",
-//   upload.single("fileThumbnail"), authorize(level.Admin),
-//   productController.update
-// );
-
-// router.get("/read", authorize(), productController.read);
-// router.get("/read/:id", authorize(), productController.findById);
-// router.delete("/delete", authorize(), productController.delete);
 
 module.exports = router;
