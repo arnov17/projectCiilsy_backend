@@ -29,7 +29,7 @@ router.post(
 );
 
 router.patch(
-  "/update",
+  "/update/:id",
   upload.single("fileThumbnail"),
   authorize(level.Admin),
   productController.update

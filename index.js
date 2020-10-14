@@ -25,12 +25,12 @@ app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/category", categoryRouter);
 
 // error handling
-app.use((error, req, res, next) => {
-  const status = error.statusCode || 500;
-  return res.status(status).json({
-    message: status !== 500 ? error.message : "Internal server error",
-  });
-});
+// app.use((error, req, res, next) => {
+//   const status = error.statusCode || 500;
+//   return res.status(status).json({
+//     message: status !== 500 ? error.message : "Internal server error",
+//   });
+// });
 
 app.listen(PORT, () => {
   console.log(`Success running server on port ${PORT}`);

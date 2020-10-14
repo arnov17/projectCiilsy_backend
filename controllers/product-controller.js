@@ -42,10 +42,10 @@ exports.create = async (req, res, next) => {
 exports.read = async (req, res, next) => {
   try {
     const params = req.query;
-    console.log(params);
+    // console.log(params);
 
     //Pagination
-    const limit = params.limit ? Number(params.limit) : 3;
+    const limit = params.limit ? Number(params.limit) : 1;
     const offset = Number(limit) * ((Number(params.page || 1) || 1) - 1);
 
     const order =
@@ -59,7 +59,7 @@ exports.read = async (req, res, next) => {
     if (params.author) where.author = { [Op.like]: `%${params.author}%` };
 
     const products = await ProductModel.findAndCountAll({
-      limit: limit || 3,
+      limit: limit || 1,
       offset,
       where,
       order,
@@ -99,8 +99,10 @@ exports.findById = async (req, res) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const params = req.params;
+    const id = params.id;
+    console.log(id);
     const {
-      id,
       title,
       author,
       description,
@@ -112,42 +114,81 @@ exports.update = async (req, res, next) => {
     } = req.body;
     console.log(req.body);
 
-    // console.log(req.file);
-    // const upload_thumbnailurl = `/thumbnail/${req.file.filename}`;
+    if (req.body.fileThumbnail !== "null") {
+      console.log(req.file);
+      const upload_thumbnailurl = `/thumbnail/${req.file.filename}`;
 
-    const existProduct = await ProductModel.findOne({
-      where: {
-        id: id,
-      },
-    });
-    if (!existProduct) {
-      const error = new Error("product not found");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    const updateProduct = await ProductModel.update(
-      {
-        title,
-        author,
-        description,
-        category_id,
-        price,
-        stock,
-        // thumbnail_url: upload_thumbnailurl,
-        user_id: user_id,
-      },
-      {
+      const existProduct = await ProductModel.findOne({
         where: {
           id: id,
         },
+      });
+      if (!existProduct) {
+        const error = new Error("product not found");
+        error.statusCode = 404;
+        throw error;
       }
-    );
 
-    return res.status(200).json({
-      message: "Success update product",
-      data: updateProduct,
-    });
+      const updateProduct = await ProductModel.update(
+        {
+          title,
+          author,
+          description,
+          category_id,
+          price,
+          stock,
+          thumbnail_url: upload_thumbnailurl,
+          user_id: user_id,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      return res.status(200).json({
+        message: "Success update product",
+        data: updateProduct,
+      });
+    } else {
+      // console.log(req.file);
+      // const upload_thumbnailurl = `/thumbnail/${req.file.filename}`;
+
+      const existProduct = await ProductModel.findOne({
+        where: {
+          id: id,
+        },
+      });
+      if (!existProduct) {
+        const error = new Error("product not found");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      const updateProduct = await ProductModel.update(
+        {
+          title,
+          author,
+          description,
+          category_id,
+          price,
+          stock,
+          // thumbnail_url: upload_thumbnailurl,
+          user_id: user_id,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      return res.status(200).json({
+        message: "Success update product",
+        data: updateProduct,
+      });
+    }
   } catch (error) {
     return next(error);
   }
