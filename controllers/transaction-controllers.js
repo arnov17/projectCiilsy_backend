@@ -5,6 +5,8 @@ const { TransactionModel, UserModel, OrderModel } = require("../db/models");
 exports.create = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
+    const { amount } = req.body;
+    // console.log(amount);
 
     if (!authorization) {
       const error = new Error("Authorization required");
@@ -28,16 +30,18 @@ exports.create = async (req, res, next) => {
     }
 
     const transaction = await TransactionModel.create({
-      amount: 0,
+      amount,
       status: "PENDING",
       user_id: user.id,
     });
+    // console.log(transaction);
 
     return res.status(200).json({
       message: "Success create transaction",
       data: transaction,
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
@@ -67,11 +71,11 @@ exports.update = async (req, res, next) => {
       throw error;
     }
 
-    const {status, transaction_id } = req.body;
+    const { status, idTransaction } = req.body;
 
     const existTransaction = await TransactionModel.findOne({
       where: {
-        id: transaction_id,
+        id: idTransaction,
       },
       include: [
         {
@@ -86,29 +90,29 @@ exports.update = async (req, res, next) => {
       throw error;
     }
 
-    let amount = 0;
-    existTransaction.orders.map((order) => {
-      amount += order.price * order.total;
-    });
+    // let amount = 0;
+    // existTransaction.orders.map((order) => {
+    //   amount += order.price * order.total;
+    // });
 
     await TransactionModel.update(
       {
-        amount,
+        // amount,
         status: status ? status : existTransaction.status,
       },
       {
         where: {
-          id: transaction_id,
+          id: idTransaction,
         },
       }
     );
 
     return res.status(200).json({
       message: "Success update transaction",
-      data: existTransaction
+      data: existTransaction,
     });
   } catch (error) {
-      console.log(error)
+    console.log(error);
     return next(error);
   }
 };

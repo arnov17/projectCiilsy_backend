@@ -3,17 +3,28 @@ const { OrderModel } = require("./order-model");
 const { TransactionModel } = require("./transaction-model");
 const { UserModel } = require("./user-model");
 const { ProductModel } = require("./product-model");
-const { CategoryModel } =require("./category-model");
-
+const { CategoryModel } = require("./category-model");
 
 ProductModel.belongsTo(UserModel, { foreignKey: "user_id", as: "seller" });
 UserModel.hasMany(ProductModel, { foreignKey: "user_id", as: "products" });
 
-ProductModel.belongsTo(CategoryModel, { foreignKey: "category_id", as: "product_category" });
-CategoryModel.hasMany(ProductModel, { foreignKey: "category_id", as: "list_category" });
+ProductModel.belongsTo(CategoryModel, {
+  foreignKey: "category_id",
+  as: "product_category",
+});
+CategoryModel.hasMany(ProductModel, {
+  foreignKey: "category_id",
+  as: "list_category",
+});
 
-CategoryModel.belongsTo(UserModel, { foreignKey: "user_id", as : "maker_category"});
-UserModel.hasMany(CategoryModel, { foreignKey: "user_id", as : "user_to_category"})
+CategoryModel.belongsTo(UserModel, {
+  foreignKey: "user_id",
+  as: "maker_category",
+});
+UserModel.hasMany(CategoryModel, {
+  foreignKey: "user_id",
+  as: "user_to_category",
+});
 
 TransactionModel.belongsTo(UserModel, { foreignKey: "user_id", as: "buyer" });
 UserModel.hasMany(TransactionModel, {
@@ -36,13 +47,11 @@ TransactionModel.hasMany(OrderModel, {
   as: "orders",
 });
 
-
-
 module.exports = {
   Sequelize,
   OrderModel,
   TransactionModel,
   UserModel,
   ProductModel,
-  CategoryModel
+  CategoryModel,
 };

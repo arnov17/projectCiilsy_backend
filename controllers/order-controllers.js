@@ -68,6 +68,7 @@ exports.create = async (req, res, next) => {
       data: order,
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
