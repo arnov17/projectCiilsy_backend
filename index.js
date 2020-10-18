@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -14,7 +14,7 @@ const orderRouter = require("./routers/order");
 const categoryRouter = require("./routers/category");
 
 app.use(express.json());
-app.use('/thumbnail', express.static(__dirname + '/thumbnail/'));
+app.use("/thumbnail", express.static(__dirname + "/thumbnail/"));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors());
@@ -24,7 +24,7 @@ app.use("/api/v1/transaction", transactionRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/category", categoryRouter);
 
-// error handling 
+// error handling
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   return res.status(status).json({
