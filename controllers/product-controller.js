@@ -45,7 +45,7 @@ exports.read = async (req, res, next) => {
     // console.log(params);
 
     //Pagination
-    const limit = params.limit ? Number(params.limit) : 1;
+    const limit = params.limit ? Number(params.limit) : 3;
     const offset = Number(limit) * ((Number(params.page || 1) || 1) - 1);
 
     const order =
@@ -59,7 +59,7 @@ exports.read = async (req, res, next) => {
     if (params.author) where.author = { [Op.like]: `%${params.author}%` };
 
     const products = await ProductModel.findAndCountAll({
-      limit: limit || 1,
+      limit: limit || 3,
       offset,
       where,
       order,
