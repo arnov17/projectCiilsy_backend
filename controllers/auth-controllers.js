@@ -83,6 +83,7 @@ exports.login = async (req, res, next) => {
       data: {
         name: existUser.name,
         id: existUser.id,
+        level: existUser.level,
         access_token: token,
         type: "Bearer",
       },
